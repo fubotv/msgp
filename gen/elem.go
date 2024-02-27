@@ -529,13 +529,14 @@ const (
 // MessagePack type.
 type BaseElem struct {
 	common
-	ShimMode     ShimMode  // Method used to shim
-	ShimToBase   string    // shim to base type, or empty
-	ShimFromBase string    // shim from base type, or empty
-	Value        Primitive // Type of element
-	Convert      bool      // should we do an explicit conversion?
-	mustinline   bool      // must inline; not printable
-	needsref     bool      // needs reference for shim
+	ShimMode            ShimMode  // Method used to shim
+	ShimToBase          string    // shim to base type, or empty
+	ShimFromBase        string    // shim from base type, or empty
+	Value               Primitive // Type of element
+	Convert             bool      // should we do an explicit conversion?
+	mustinline          bool      // must inline; not printable
+	needsref            bool      // needs reference for shim
+	ResolvePolymorphism bool
 }
 
 func (s *BaseElem) Printable() bool { return !s.mustinline }

@@ -326,7 +326,7 @@ func (fs *FileSet) parseFieldList(fl *ast.FieldList) []gen.StructField {
 // translate *ast.Field into []gen.StructField
 func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 	sf := make([]gen.StructField, 1)
-	var extension, flatten bool
+	var extension, flatten, polymorphic bool
 	// parse tag; otherwise field name is field tag
 	if f.Tag != nil {
 		body := reflect.StructTag(strings.Trim(f.Tag.Value, "`")).Get("msg")
@@ -340,6 +340,8 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 				extension = true
 			case "flatten":
 				flatten = true
+			case "polymorphic":
+				polymorphic = true
 			}
 		}
 		// ignore "-" fields
@@ -402,6 +404,18 @@ func (fs *FileSet) getField(f *ast.Field) []gen.StructField {
 			return nil
 		}
 	}
+
+	if polymorphic {
+		switch ex := ex.(type) {
+		case *gen.BaseElem:
+			// TODO: can we check if object has polymorphic interface at codegen time?
+			ex.ResolvePolymorphism = true
+		default:
+			warnf("couldn't cast to polymorphic.")
+			return nil
+		}
+	}
+
 	return sf
 }
 

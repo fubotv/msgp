@@ -172,7 +172,25 @@ func (d *decodeGen) gBase(b *BaseElem) {
 		if b.Convert {
 			d.p.printf("\n%s, err = dc.Read%s()", tmp, bname)
 		} else {
-			d.p.printf("\n%s, err = dc.Read%s()", vname, bname)
+
+			if b.ResolvePolymorphism {
+				println("decodeGen::gBase(); found interface field with a polymorphic tag, injecting resolver code.")
+				output := `
+				// user requested an interface{} field to be resolved at runtime by tagging it 'polymorphic',
+				// if the parent struct has a custom unmarshaller for this field, use it.
+				var pp interface{} = z
+				if poly, ok := pp.(msgp.PolymorphicResolver); ok {
+					// get the concrete type for this interface{} field
+					%s, err = poly.ResolveDecodeMsg(msgp.UnsafeString(field), dc)
+				} else {
+					// missing runtime resolver, fallback to default behavior
+					%s, err = dc.Read%s()
+				}
+`
+				d.p.printf(output, vname, vname, bname)
+			} else {
+				d.p.printf("\n%s, err = dc.Read%s()", vname, bname)
+			}
 		}
 	}
 	d.p.wrapErrCheck(d.ctx.ArgsStr())
