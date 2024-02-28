@@ -155,11 +155,8 @@ func (u *unmarshalGen) gBase(b *BaseElem) {
 		u.p.printf("\nbts, err = %s.UnmarshalMsg(bts)", lowered)
 	default:
 		if b.ResolvePolymorphism {
-			println("gBase(); found interface field with a polymorphic tag, injecting resolver code.")
+			println("unmarshalGen::gBase(); found interface field with a polymorphic tag, injecting resolver code.")
 			output := `
-				// would be nice to do this to ensure the interface is implemented at compile time:
-				// var _ msgp.PolymorphicResolver = (*EntityDto)(nil)
-
 				// user requested an interface{} field to be resolved at runtime by tagging it 'polymorphic',
 				// if the parent struct has a custom unmarshaller for this field, use it.
 				var pp interface{} = z
