@@ -163,9 +163,9 @@ func (u *unmarshalGen) gBase(b *BaseElem) {
 				// user requested an interface{} field to be resolved at runtime by tagging it 'polymorphic',
 				// if the parent struct has a custom unmarshaller for this field, use it.
 				var pp interface{} = z
-				if poly, ok := pp.(msgp.PolymorphicResolver); ok {
+				if resolver, ok := pp.(msgp.PolymorphicResolver); ok {
 					// get the concrete type for this interface{} field
-					%s, bts, err = poly.ResolveUnmarshalMsg(msgp.UnsafeString(field), bts)
+					%s, bts, err = msgp.ResolveAndUnmarshalMsg(resolver, msgp.UnsafeString(field), bts)
 				} else {
 					// missing runtime resolver, fallback to default behavior
 					%s, bts, err = msgp.Read%sBytes(bts)

@@ -83,14 +83,6 @@ func freeR(m *Reader) {
 	readerPool.Put(m)
 }
 
-// PolymorphicResolver interface can be added to any model with polymorphic fields (interface{}s)
-// allowing them to unmarshal themselves for MessagePack using a runtime hint (name of the field).
-// This greatly reduces amount of custom unmarshaling code we have to write.
-type PolymorphicResolver interface {
-	ResolveUnmarshalMsg(string, []byte) (interface{}, []byte, error)
-	ResolveDecodeMsg(string, *Reader) (interface{}, error)
-}
-
 // Unmarshaler is the interface fulfilled
 // by objects that know how to unmarshal
 // themselves from MessagePack.

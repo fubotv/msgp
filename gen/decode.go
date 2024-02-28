@@ -179,9 +179,9 @@ func (d *decodeGen) gBase(b *BaseElem) {
 				// user requested an interface{} field to be resolved at runtime by tagging it 'polymorphic',
 				// if the parent struct has a custom unmarshaller for this field, use it.
 				var pp interface{} = z
-				if poly, ok := pp.(msgp.PolymorphicResolver); ok {
+				if resolver, ok := pp.(msgp.PolymorphicResolver); ok {
 					// get the concrete type for this interface{} field
-					%s, err = poly.ResolveDecodeMsg(msgp.UnsafeString(field), dc)
+					%s, err = msgp.ResolveAndDecodeMsg(resolver, msgp.UnsafeString(field), dc)
 				} else {
 					// missing runtime resolver, fallback to default behavior
 					%s, err = dc.Read%s()
