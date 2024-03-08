@@ -466,6 +466,12 @@ func (s *Struct) Complexity() int {
 	c := 1
 	for i := range s.Fields {
 		c += s.Fields[i].FieldElem.Complexity()
+
+		// if any field requires polymorphic deserialization, raise struct complexity to avoid inlining.
+		// this simplifies the code generation for polymorphic unmarshalling.
+		if s.Fields[i].HasTagPart("polymorphic") {
+			c += 5 // above maxComplexity from inline.go
+		}
 	}
 	return c
 }
