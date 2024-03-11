@@ -154,7 +154,24 @@ func (u *unmarshalGen) gBase(b *BaseElem) {
 	case IDENT:
 		u.p.printf("\nbts, err = %s.UnmarshalMsg(bts)", lowered)
 	default:
-		u.p.printf("\n%s, bts, err = msgp.Read%sBytes(bts)", refname, b.BaseName())
+		if b.ResolvePolymorphism {
+			println("unmarshalGen::gBase(); found interface field with a polymorphic tag, injecting resolver code.")
+			output := `
+				// user requested an interface{} field to be resolved at runtime by tagging it 'polymorphic',
+				// if the parent struct has a custom unmarshaller for this field, use it.
+				var pp interface{} = z
+				if resolver, ok := pp.(msgp.PolymorphicResolver); ok {
+					// get the concrete type for this interface{} field
+					%s, bts, err = msgp.ResolveAndUnmarshalMsg(resolver, msgp.UnsafeString(field), bts)
+				} else {
+					// missing runtime resolver, fallback to default behavior
+					%s, bts, err = msgp.Read%sBytes(bts)
+				}
+`
+			u.p.printf(output, refname, refname, b.BaseName())
+		} else {
+			u.p.printf("\n%s, bts, err = msgp.Read%sBytes(bts)", refname, b.BaseName())
+		}
 	}
 	u.p.wrapErrCheck(u.ctx.ArgsStr())
 

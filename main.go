@@ -59,6 +59,7 @@ func exitln(res string) {
 }
 
 func main() {
+	println("Running Alex's msgpackgen fork")
 	flag.Parse()
 
 	if *verbose {
