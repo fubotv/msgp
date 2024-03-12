@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"github.com/tinylib/msgp/msgp"
+	"github.com/fubotv/msgp/msgp"
 	"reflect"
 	"testing"
 )

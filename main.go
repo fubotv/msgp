@@ -28,9 +28,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/tinylib/msgp/gen"
-	"github.com/tinylib/msgp/parse"
-	"github.com/tinylib/msgp/printer"
+	"github.com/fubotv/msgp/gen"
+	"github.com/fubotv/msgp/parse"
+	"github.com/fubotv/msgp/printer"
 )
 
 var (

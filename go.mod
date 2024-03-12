@@ -1,4 +1,4 @@
-module github.com/tinylib/msgp
+module github.com/fubotv/msgp
 
 go 1.18
 

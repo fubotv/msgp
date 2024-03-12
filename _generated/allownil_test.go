@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/tinylib/msgp/msgp"
+	"github.com/fubotv/msgp/msgp"
 )
 
 func TestAllownil(t *testing.T) {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/tinylib/msgp/msgp"
+	"github.com/fubotv/msgp/msgp"
 )
 
 //go:generate msgp
